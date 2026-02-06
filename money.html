@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Honest Market - Fresh Food</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Pristina&display=swap" rel="stylesheet">
+
+<style>
+    /* --- MAIN MARKET STYLES --- */
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    body{
+        font-family:'Poppins',sans-serif;
+        background:#252024;
+        color:#f1f1f1;
+    }
+
+    header{
+        text-align:center;
+        padding:20px;
+        background:#1a1619;
+        border-bottom:2px solid darkorange;
+    }
+    header h2{
+        font-family:'Pristina',cursive;
+        font-size:40px;
+        color:darkorange;
+    }
+    header p{color:#ccc}
+
+    /* Main Navigation */
+    nav.main-nav{
+        background:#11020b;
+        text-align:center;
+        padding:15px;
+        position:sticky;
+        top:0;
+        z-index: 100;
+    }
+    nav.main-nav a{
+        color:pink;
+        margin:0 15px;
+        text-decoration:none;
+        font-weight:600;
+        font-size: 0.9rem;
+    }
+    nav.main-nav a:hover{color:darkorange}
+
+    /* HERO */
+    .hero{position:relative; overflow: hidden;}
+    .hero img{
+        width:100%;
+        height:450px; /* Taller for better impact */
+        object-fit:cover;
+        filter:brightness(0.6);
+        transition: transform 5s ease;
+    }
+    .hero:hover img { transform: scale(1.05); }
+    
+    .hero-text{
+        position:absolute;
+        inset:0;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        background: rgba(0,0,0,0.3); /* Added overlay for readability */
+    }
+    .hero-text h1{
+        font-family:'Pristina',cursive;
+        font-size:60px;
+        color:darkorange;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        margin-bottom: 10px;
+    }
+
+    .btn{
+        background:darkorange;
+        color:black;
+        padding:12px 30px;
+        border-radius:25px;
+        text-decoration:none;
+        font-weight:bold;
+        margin-top:15px;
+        display:inline-block;
+        transition: 0.3s;
+    }
+    .btn:hover {
+        background: #ff8c00;
+        transform: translateY(-2px);
+    }
+
+    /* HOME GALLERY */
+    .home-gallery{
+        display:flex;
+        gap:20px;
+        justify-content:center;
+        padding:40px 20px;
+        background:#1a1619;
+    }
+    .home-gallery img{
+        width:100%;
+        max-width:300px;
+        height:200px;
+        object-fit:cover;
+        border-radius:10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        transition: transform 0.3s;
+    }
+    .home-gallery img:hover { transform: scale(1.02); }
+
+    /* PRODUCTS */
+    .products{
+        padding:40px 20px;
+        background:#252024;
+    }
+    .section-title{
+        text-align:center;
+        font-family:'Pristina',cursive;
+        font-size:45px;
+        color:darkorange;
+        margin-bottom:40px;
+    }
+    .product-grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+        gap:30px;
+    }
+    .product-item{
+        background:#1a1619;
+        border-radius:15px;
+        overflow:hidden;
+        text-align:center;
+        border: 1px solid #333;
+        transition: 0.3s;
+    }
+    .product-item:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255, 140, 0, 0.2); }
+    
+    .product-item img{
+        width:100%;
+        height:220px;
+        object-fit:cover;
+    }
+    .product-info{padding:20px}
+    .price{font-weight:bold; color: darkorange; font-size: 1.2rem; margin: 10px 0;}
+
+    .description{
+        display:none;
+        font-size:14px;
+        color:#aaa;
+        margin-top:15px;
+        padding-top:15px;
+        border-top: 1px solid #333;
+    }
+
+    /* BENEFITS */
+    .benefits-container{
+        display:flex;
+        flex-wrap:wrap;
+        gap:20px;
+        justify-content:center;
+        padding:30px;
+    }
+    .benefit-card{
+        width:280px;
+        background:#332a30;
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        border: 1px solid #444;
+    }
+    .benefit-card img{
+        width:100%;
+        height:170px;
+        object-fit:cover;
+        border-radius:10px;
+        margin-bottom: 15px;
+    }
+
+    /* CONTACT */
+    .content{
+        background:#11020b;
+        padding:50px 20px;
+        text-align:center;
+    }
+
+    footer{
+        background:black;
+        text-align:center;
+        padding:20px;
+        color:#777;
+        border-top: 2px solid #333;
+    }
+
+    /* --- ACCESSIBILITY SUITE MODAL (Scoped to avoid conflict) --- */
+    #disability-modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: 20px;
+    }
+    
+    .a11y-wrapper {
+        background: #F4F6F7;
+        color: #333;
+        max-width: 600px;
+        margin: 20px auto;
+        border-radius: 10px;
+        font-family: 'Segoe UI', sans-serif;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        height: 90vh; /* Fixed height for app feel */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* A11Y Specific Header */
+    .a11y-header {
+        background: #2E86C1;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .close-a11y {
+        background: none; border: none; color: white; font-size: 24px; cursor: pointer;
+    }
+
+    /* A11Y Nav */
+    .a11y-nav {
+        background: #fff;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+    .a11y-nav-btn {
+        background: none; border: none; padding: 10px; cursor: pointer; font-weight: 600; color: #666;
+    }
+    .a11y-nav-btn.active { background: #2E86C1; color: white; border-radius: 5px; }
+
+    /* A11Y Content */
+    .a11y-main {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #F4F6F7;
+    }
+    .a11y-section { display: none; }
+    .a11y-section.active { display: block; animation: fadeIn 0.3s; }
+
+    .a11y-big-input {
+        width: 100%; height: 120px; font-size: 1.2rem; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px;
+    }
+    .a11y-btn {
+        width: 100%; padding: 15px; background: #2E86C1; color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer;
+    }
+    .a11y-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;
+    }
+    .a11y-card {
+        background: white; padding: 15px; text-align: center; border-radius: 8px; border: 1px solid #ddd; cursor: pointer;
+    }
+    .a11y-card:hover { border-color: #2E86C1; }
+
+    @media(max-width:600px){
+        nav.main-nav a{display:block;margin:10px 0;}
+        .home-gallery{flex-direction:column;align-items:center;}
+        .hero-text h1{font-size:40px;}
+    }
+</style>
+</head>
+
+<body>
+
+<!-- MAIN SITE -->
+<header>
+<h2>Welcome to jamilla super Market</h2>
+<p>Fresh food you can trust</p>
+</header>
+
+<nav class="main-nav">
+<a href="#home">HOME</a>
+<a href="#products">PRODUCTS</a>
+<a href="#benefits">BENEFITS</a>
+<a href="#contact">CONTACT</a>
+<a href="#" onclick="openAccessibility()" style="color: #4CAF50;">♿ ACCESSIBILITY</a>
+</nav>
+
+<!-- HOME SECTION -->
+<div class="hero" id="home">
+    <!-- High quality hero image -->
+    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2070&auto=format&fit=crop" alt="Fresh Produce Market">
+<div class="hero-text">
+<h1>Fresh & Organic</h1>
+<p style="color:#fff; margin-bottom:20px;">Directly from the farm to your table</p>
+<a href="#products" class="btn">Shop Now</a>
+</div>
+</div>
+
+<section class="home-gallery">
+    <!-- Added 3 distinct high-quality images -->
+<img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=1000&auto=format&fit=crop" alt="Fresh Vegetables">
+<img src="https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1000&auto=format&fit=crop" alt="Organic Food">
+<img src="https://images.unsplash.com/photo-1518843875459-f738682238a6?q=80&w=1000&auto=format&fit=crop" alt="Healthy Fruits">
+</section>
+
+<!-- PRODUCTS SECTION -->
+<section class="products" id="products">
+<h2 class="section-title">Our Products</h2>
+
+<div class="product-grid">
+
+    <!-- Product 1: Vegetables -->
+    <div class="product-item">
+        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1000&auto=format&fit=crop" alt="Fresh Vegetables">
+        <div class="product-info">
+            <h4>Fresh Vegetables</h4>
+            <p class="price">$5 / kg</p>
+            <a class="btn" onclick="toggleDesc('p1')">View Details</a>
+            <p id="p1" class="description">
+                Our vegetables are harvested daily. They improve digestion, boost immunity, and provide essential vitamins.
+            </p>
+        </div>
+    </div>
+
+    <!-- Product 2: Fruits -->
+    <div class="product-item">
+        <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=1000&auto=format&fit=crop" alt="Fresh Fruits">
+        <div class="product-info">
+            <h4>Fresh Fruits</h4>
+            <p class="price">$3 / kg</p>
+            <a class="btn" onclick="toggleDesc('p2')">View Details</a>
+            <p id="p2" class="description">
+                Sweet and juicy fruits collected from local orchards. Great for energy and health.
+            </p>
+        </div>
+    </div>
+
+    <!-- Product 3: Meat -->
+    <div class="product-item">
+        <img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?q=80&w=1000&auto=format&fit=crop" alt="Premium Meat">
+        <div class="product-info">
+            <h4>Premium Meat</h4>
+            <p class="price">$12 / kg</p>
+            <a class="btn" onclick="toggleDesc('p3')">View Details</a>
+            <p id="p3" class="description">
+                100% Halal and organic meat. Rich in protein and sourced from healthy farms.
+            </p>
+        </div>
+    </div>
+
+    <!-- Product 4: Dairy -->
+    <div class="product-item">
+        <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?q=80&w=1000&auto=format&fit=crop" alt="Dairy Products">
+        <div class="product-info">
+            <h4>Fresh Dairy</h4>
+            <p class="price">$2 / litre</p>
+            <a class="btn" onclick="toggleDesc('p4')">View Details</a>
+            <p id="p4" class="description">
+                Fresh milk, cheese, and yogurt. Pasteurized and safe for the whole family.
+            </p>
+        </div>
+    </div>
+
+    <!-- Product 5: Bread -->
+    <div class="product-item">
+        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1000&auto=format&fit=crop" alt="Bakery">
+        <div class="product-info">
+            <h4>Bakery</h4>
+            <p class="price">$1.50 / loaf</p>
+            <a class="btn" onclick="toggleDesc('p5')">View Details</a>
+            <p id="p5" class="description">
+                Freshly baked bread, muffins, and croissants every single morning.
+            </p>
+        </div>
+    </div>
+
+    <!-- Product 6: Juice -->
+    <div class="product-item">
+        <img src="https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000&auto=format&fit=crop" alt="Natural Juice">
+        <div class="product-info">
+            <h4>Natural Juice</h4>
+            <p class="price">$4 / bottle</p>
+            <a class="btn" onclick="toggleDesc('p6')">View Details</a>
+            <p id="p6" class="description">
+                100% natural cold-pressed juices without added sugar or preservatives.
+            </p>
+        </div>
+    </div>
+
+</div>
+</section>
+
+<!-- BENEFITS SECTION -->
+<section id="benefits" style="background:#252024; padding-bottom:40px;">
+<h2 class="section-title">Why Eat Healthy?</h2>
+<div class="benefits-container">
+
+<div class="benefit-card">
+<img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=600&auto=format&fit=crop">
+<h3>Healthy Body</h3>
+<p>Good food keeps your body strong.</p>
+</div>
+
+<div class="benefit-card">
+<img src="https://images.unsplash.com/photo-1475093165584-7343737c3d9f?q=80&w=600&auto=format&fit=crop">
+<h3>More Energy</h3>
+<p>Eat well and stay active daily.</p>
+</div>
+
+<div class="benefit-card">
+<img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop">
+<h3>Mental Wellness</h3>
+<p>Fresh food improves your mood.</p>
+</div>
+
+</div>
+</section>
+
+<!-- CONTACT SECTION -->
+<!-- CONTACT SECTION -->
+<section id="contact" class="content">
+    <h2 class="section-title">Contact Us</h2>
+    <p style="color:#ccc; margin-bottom:30px;">
+        Have a question or want to place an order? Send us a message.
+    </p>
+
+    <form id="contactForm" style="max-width:500px; margin:0 auto;">
+        <input type="text" id="name" placeholder="Your Name" required
+            style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none;">
+
+        <input type="email" id="email" placeholder="Your Email" required
+            style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none;">
+
+        <textarea id="message" placeholder="Your Message" required
+            style="width:100%; padding:12px; height:120px; margin-bottom:20px; border-radius:8px; border:none;"></textarea>
+
+        <button type="submit" class="btn" style="width:100%;">Send Message</button>
+    </form>
+
+    <div id="formSuccess"
+        style="margin-top:20px; color:#2ecc71; font-weight:bold;"></div>
+</section>
+
+  </form>
+
+  <div id="formSuccess" style="text-align:center; margin-top:15px; color:#2ecc71; font-weight:bold;"></div>
+</div>
+
+<script>
+
+   
+document.getElementById("contactForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    if(name && email && message){
+        document.getElementById("formSuccess").innerText =
+            "Thank you " + name + "! Your message has been sent.";
+
+        document.getElementById("contactForm").reset();
+    }
+});
+
+
+
+</script>
+
+<img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1000&auto=format&fit=crop"
+     style="width:80%;max-width:600px;border-radius:15px;margin-top:20px; border: 2px solid #333;">
+</div>
+
+
+
+<!-- ACCESSIBILITY MODAL WIDGET -->
+<div id="disability-modal">
+    <div class="a11y-wrapper">
+        <div class="a11y-header">
+            <div style="font-weight:bold;">Accessibility Suite</div>
+            <div class="header-controls" style="display:flex; gap:10px; align-items:center;">
+                <button class="lang-btn" onclick="setLang('en')">EN</button>
+                <button class="lang-btn" onclick="setLang('rw')">RW</button>
+                <button class="close-a11y" onclick="closeAccessibility()">&times;</button>
+            </div>
+        </div>
+
+        <nav class="a11y-nav">
+            <button class="a11y-nav-btn active" onclick="showA11ySec('type', this)">Type & Speak</button>
+            <button class="a11y-nav-btn" onclick="showA11ySec('bank', this)">Phrases</button>
+            <button class="a11y-nav-btn" onclick="showA11ySec('add', this)">Add New</button>
+        </nav>
+
+        <main class="a11y-main">
+            <!-- Type & Speak -->
+            <div id="type" class="a11y-section active">
+                <h2>Type to Speak</h2>
+                <p style="margin-bottom:10px; color:#666;">Type your message and tap Speak.</p>
+                <textarea id="mainInput" class="a11y-big-input" placeholder="Type here..."></textarea>
+                <button class="a11y-btn" onclick="speakMain()">🔊 SPEAK MESSAGE</button>
+            </div>
+
+            <!-- Phrase Bank -->
+            <div id="bank" class="a11y-section">
+                <div id="bankContent"></div>
+            </div>
+
+            <!-- Add Custom -->
+            <div id="add" class="a11y-section">
+                <h2>Create New Phrase</h2>
+                <div class="form-group" style="margin-bottom:15px;">
+                    <label>Phrase Text</label>
+                    <input type="text" id="customText" class="a11y-big-input" style="height:50px;">
+                </div>
+                <button class="a11y-btn" style="background:#27AE60;" onclick="addCustom()">Add to Bank</button>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    // --- MARKET LOGIC ---
+    function toggleDesc(id){
+        const d=document.getElementById(id);
+        if(d.style.display === "block"){
+            d.style.display = "none";
+        } else {
+            d.style.display = "block";
+        }
+    }
+
+    // --- ACCESSIBILITY LOGIC ---
+    // Data
+    let currentLang = 'en';
+    const synth = window.speechSynthesis;
+    
+    const presetDB = {
+        "Basics": [
+             { en: "Yes", rw: "Yego" },
+            { en: "No", rw: "Oya" },
+            { en: "Help me please", rw: "Mpfura" },
+            { en: "Thank you", rw: "Murakoze" },
+            { en: "Sorry", rw: "Mbabarira" }
+        ],
+        "Medical": [
+            { en: "I am in pain", rw : "Mpfungura neza" },
+            { en: "Call the doctor", rw: "Hamagara muganga" },
+            { en: "I need medicine", rw : "Mfata imiti" }
+        ],
+        "Food": [
+            { en: "I am hungry", rw : "Ndagira nnye" },
+            { en: "I am thirsty", rw : "Mfite amazi" },
+            { en: "I want water", rw : "Mfate amazi" }
+        ]
+    };
+
+    // Modal Control
+    function openAccessibility() {
+        document.getElementById('disability-modal').style.display = 'block';
+        renderBank();
+    }
+    function closeAccessibility() {
+        document.getElementById('disability-modal').style.display = 'none';
+        synth.cancel(); // Stop speaking when closed
+    }
+
+    // Navigation inside Widget
+    function showA11ySec(id, btn) {
+        document.querySelectorAll('.a11y-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.a11y-nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // Speaking
+    function speakText(text) {
+        if(synth.speaking) synth.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 0.9;
+        utter.lang = currentLang === 'en' ? 'en-US' : 'rw-RW';
+        synth.speak(utter);
+    }
+
+    function speakMain() {
+        const text = document.getElementById('mainInput').value;
+        if(text.trim() !== "") speakText(text);
+    }
+
+    // Language
+    function setLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => {
+            b.style.background = b.textContent.toLowerCase() === lang ? '#ffeb3b' : 'white';
+        });
+        renderBank();
+    }
+
+    // Render Bank
+    function renderBank() {
+        const container = document.getElementById('bankContent');
+        container.innerHTML = "";
+
+        const allData = { ...presetDB };
+        // Add custom phrases if any
+        const custom = JSON.parse(localStorage.getItem('customPhrases')) || [];
+        if(custom.length > 0) allData["Custom"] = custom;
+
+        for (const category in allData) {
+            if (allData[category].length === 0) continue;
+
+            const title = document.createElement('h3');
+            title.innerText = category;
+            title.style.marginTop = "20px";
+            title.style.borderBottom = "1px solid #ccc";
+            container.appendChild(title);
+
+            const grid = document.createElement('div');
+            grid.className = 'a11y-grid';
+
+            allData[category].forEach(phrase => {
+                const card = document.createElement('div');
+                card.className = 'a11y-card';
+                
+                let text = "";
+                let speakObj = null;
+
+                if(phrase.en && phrase.rw) {
+                    text = phrase[currentLang];
+                    speakObj = phrase;
+                } else {
+                    text = phrase.text;
+                    speakObj = phrase.text;
+                }
+
+                card.innerText = text;
+                card.onclick = () => {
+                    if(typeof speakObj === 'string') {
+                        speakText(speakObj);
+                        document.getElementById('mainInput').value = speakObj;
+                    } else {
+                        speakText(speakObj[currentLang]);
+                        document.getElementById('mainInput').value = speakObj[currentLang];
+                    }
+                };
+                grid.appendChild(card);
+            });
+            container.appendChild(grid);
+        }
+    }
+
+    // Add Custom
+    function addCustom() {
+        const text = document.getElementById('customText').value.trim();
+        if(!text) return alert("Please enter text");
+        
+        let custom = JSON.parse(localStorage.getItem('customPhrases')) || [];
+        custom.push({ text: text });
+        localStorage.setItem('customPhrases', JSON.stringify(custom));
+        
+        document.getElementById('customText').value = "";
+        speakText(currentLang === 'en' ? "Phrase Added" : "Ongerewe");
+        showA11ySec('bank', document.querySelectorAll('.a11y-nav-btn')[1]);
+    }
+
+    // Initialize Widget Lang
+    setLang('en');
+
+    // Close modal if clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('disability-modal');
+        if (event.target == modal) {
+            closeAccessibility();
+        }
+    }
+</script>
+
+</body>
+</html>
